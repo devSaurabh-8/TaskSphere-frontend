@@ -13,24 +13,32 @@ export default function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) return;
+
+    if (!form.email || !form.password) {
+      alert("⚠️ Please fill all fields.");
+      return;
+    }
+
     setLoading(true);
     try {
+      console.log("➡️ Sending login request to:", `${API_BASE}/auth/login`);
+
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error("Failed");
       const data = await res.json();
-      setToken(data.token);
 
-      //  Success Alert
+      if (!res.ok) throw new Error(data.message || "Invalid credentials");
+
+      setToken(data.token);
       alert("✅ Login successful!");
       nav(loc.state?.from || "/dashboard", { replace: true });
-    } catch (_) {
-      alert("❌ Invalid credentials. Please try again!");
+    } catch (err) {
+      console.error("❌ Login Error:", err.message);
+      alert("❌ Login failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -42,7 +50,9 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-blue-600 text-center">
           Welcome back
         </h2>
-        <p className="text-center text-slate-600 mt-1">Login to continue</p>
+        <p className="text-center text-slate-600 mt-1">
+          Login to continue
+        </p>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
@@ -52,7 +62,8 @@ export default function Login() {
               name="email"
               value={form.email}
               onChange={onChange}
-              className="mt-2 w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 w-full px-3 py-2 rounded-lg border border-slate-300 
+              focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="you@example.com"
             />
           </div>
@@ -64,14 +75,16 @@ export default function Login() {
               name="password"
               value={form.password}
               onChange={onChange}
-              className="mt-2 w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 w-full px-3 py-2 rounded-lg border border-slate-300 
+              focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your password"
             />
           </div>
 
           <button
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+            className="w-full py-2.5 rounded-lg bg-green-500 text-white 
+            hover:bg-green-600 transition disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

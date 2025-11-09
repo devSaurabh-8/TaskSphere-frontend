@@ -1,11 +1,13 @@
-// ✅ Safe API base URL setup (for Vercel + Render)
+// ✅ src/lib/api.js
+
+// ✅ Safe API base (works for both local + Vercel)
 export const API_BASE =
   import.meta.env.VITE_API_BASE?.trim() ||
-  "https://tasksphere-backend-v2zt.onrender.com/api";
+  "https://tasksphere-backend-vz2t.onrender.com/api";
 
-// ✅ Debug log (runs once)
+// ✅ Debug (for checking correct URL in console)
 if (typeof window !== "undefined") {
-  console.log("🌍 API Base URL:", API_BASE);
+  console.log("🌍 API Base URL Loaded:", API_BASE);
 }
 
 // ✅ Token Helpers
