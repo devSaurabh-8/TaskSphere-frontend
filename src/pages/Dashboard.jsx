@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_BASE } from "../lib/api"; 
+import { API_BASE } from "../lib/api";
 import ProfileCard from "../components/ProfileCard";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const nav = useNavigate();
 
-  //  Fetch all users
+  // 🔹 Fetch all users
   const fetchUsers = async () => {
     try {
       const res = await axios.get(`${API_BASE}/users`);
-      setUsers(res.data);
+      setUsers(res.data.users || []); // ensure correct structure
     } catch (err) {
       console.error("Error fetching users:", err);
     }
@@ -22,13 +22,17 @@ const Dashboard = () => {
     fetchUsers();
   }, []);
 
-  //  Delete a user
+  // 🔹 Delete a user
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-await axios.delete(`${API_BASE}/users/${id}`);
-alert("🗑️ User deleted successfully!");
-fetchUsers();
-
+      try {
+        await axios.delete(`${API_BASE}/users/${id}`);
+        alert("🗑️ User deleted successfully!");
+        fetchUsers(); // refresh list
+      } catch (err) {
+        alert("❌ Failed to delete user!");
+        console.error(err);
+      }
     }
   };
 
