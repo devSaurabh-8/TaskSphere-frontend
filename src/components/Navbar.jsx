@@ -124,7 +124,7 @@ export default function Navbar() {
             </li>
             <li>
               <a
-                href="mailto:dev.saurabhpandey@gmail.com"
+                href="#"
                 className="hover:text-blue-600 transition"
                 onClick={toggleMenu}
               >
